@@ -1,132 +1,144 @@
 #include <iostream>
-#include <vector>
-#include <queue>
-#include <stack>
+#include <headers/Struct.hpp> 
+
 using namespace std;
 
-// Definicion del registro Cancion 
-struct cancion{
-    int Id = 0;
-    string Nombre;
-    string NombreDelArtista;
-    int Duracion;
-};
-
-
-//Variables Glb. COLA
-queue<cancion> coladecanciones;
-stack<cancion>historial;
-
-//Creando la lista global
-vector<cancion> playlist;
-
-//Prototipo De Funciones
-void getSongAndAddToPlaylist();
-void showAllThePlaylist();
-void deleteSong();
-void searchSong();
-void addToPlayQueue();
-void MostrarHistorial ();
-void EliminarHistorial();
 //Funcion Principal
 void ListaDeCanciones(){
-    int opcion = 0;
+    string opcion;
     do{
-        cout << "\n\t\t\t\t--- Lista de canciones ---\n";
-        cout << "\t1) Agregar una cancion a la lista \t\t\t2) Mostrar lista de canciones" << endl;
-        cout << "\t3) Eliminar una cancion de la lista \t\t\t4) Buscar una cancion de la lista" << endl;
-        cout << "\t5) Agregar una cancion a la cola de reproduccion \t6) Volver al menu principal" << endl;
-        cout << "\tIngrese una opcion: ";
-        cin >> opcion;
-        cin.ignore();    
-        switch (opcion){
-            case 1:{
-                getSongAndAddToPlaylist();
-            }break;
-            case 2:{
-                showAllThePlaylist();
-            }break;
-            case 3:{
-                deleteSong();
-            }break;
-            case 4:{
-                searchSong();
-            }break;
-            case 5:{
-                addToPlayQueue();
-            }break;
-            case 6:{
-                
-            }break;
-            default:{
-                cout << "¡Opcion invalida!" <<endl;
-            }break;
+        system("cls");
+        cout << "\n\t--------------------------------------------------------------------------------------------\n";
+        cout << "\t                                     Lista de Canciones                                         ";
+        cout << "\n\t--------------------------------------------------------------------------------------------\n";   
+        cout << "\t1) Agregar una Canci\242n a la lista \t\t\t2) Mostrar lista de Canciones" << endl;
+        cout << "\t3) Eliminar una Canci\242n de la lista \t\t\t4) Buscar una Canci\242n de la lista" << endl;
+        cout << "\t5) Agregar a la cola de reproducci\242n \t\t\t6) Volver al men\243 principal" << endl;
+        cout << "\n\tIngrese una opci\242n: ";   
+        getline(cin, opcion, '\n');
+        if(ValidacionDeEntero(opcion)){
+            if(opcion[0]=='1'){
+                AgregarLista();
+                cout << "\n\t";
+                system("Pause");
+            }else if(opcion[0]=='2'){
+                MostrarLista();
+                cout << "\n\t";
+                system("Pause");
+            }else if(opcion[0]=='3'){
+                EliminarCancion();
+                cout << "\n\t";
+                system("Pause");
+            }else if(opcion[0]=='4'){
+                BuscarCancion();
+                cout << "\n\t";
+                system("Pause");
+            }else if(opcion[0]=='5'){
+                AgregarCola();
+                cout << "\n\t";
+                system("pause");
+            }else if(opcion[0]=='6'){
+
+            }else{
+                cout << "\n\t\41Opcion no valida\255" << endl;
+                cout << "\n\t";
+                system("pause");
+            }
+        }else{
+            cout << "\n\tPorfavor ingrese un n\243mero" << endl;
+            cout << flush;
+            cout << "\n\t";
+            system("pause");
         }
-    }while(opcion!=6);
+    }while(opcion[0]!='6');
 
 }
 
 // Implementacion de funciones
-void getSongAndAddToPlaylist(){
+void AgregarLista(){
     bool alreadyExist = false;
-    cancion cancion;
-    cout << "\nIngresa el ID que la identificará" << endl;
-    cin >> cancion.Id;
+    cout << "\n\tIngresa el ID que la identificar\240: ";
+    cin >> CancionTemporal.Id;
     cin.ignore();
-    for(int i = 0; i < playlist.size(); i++){
+    for(int i = 0; i < Lista.size(); i++){
        
-        if (playlist[i].Id == cancion.Id){
+        if (Lista[i].Id == CancionTemporal.Id){
             alreadyExist = true;
         }
     }
-    
     if(alreadyExist){
-        cout << "El ID de la canción ya existe, intenta con otro nuevo";
+        cout << "\tEl ID de la canci\242n ya existe, intenta con otro nuevo";
     }else{
-        
-    cin.ignore();
-    cout << "Ingresa el nombre de la cancion" << endl;
-    getline(cin, cancion.Nombre);
-    cout << "Ingresa el nombre del artista" << endl;
-    getline(cin, cancion.NombreDelArtista);
-    cout << "¿Cuál es la duración?" << endl;
-    cin >> cancion.Duracion;
-    playlist.push_back(cancion);
-    historial.push(cancion);
-}
-     
-}
-
-void showAllThePlaylist(){
-    for (int i = 0; i < playlist.size(); i++){
-        cout << "\nID: " << playlist[i].Id << "\t";
-        cout << "Nombre canción : " << playlist[i].Nombre << "\t";
-        cout << "Nombre del artista: " << playlist[i].NombreDelArtista << "\t";
-        cout << "Duracion: " << playlist[i].Duracion << "\n";
-    }
-}
-
-void deleteSong(){
-    int id;
-    cout << "\nIngresa el ID que deseas eliminar"<< endl;
-    cin >> id;
-    cin.ignore();
-    for(int i = 0; i < playlist.size(); i++){
-        if(playlist[i].Id==id){
-            playlist.erase(playlist.begin() + i);
+        cout << "\tIngresa el nombre de la canci\242n: ";
+        getline(cin, CancionTemporal.Nombre);
+        cout << "\tIngresa el nombre del artista: ";
+        getline(cin, CancionTemporal.NombreDelArtista);
+        cout << "\tIngrese la ruta absoluta del archivo ogg: ";
+        getline(cin, CancionTemporal.Archivo);
+        if(!music.openFromFile(CancionTemporal.Archivo)){
+            cout << "\tArchivo no encontrado" << endl;
+            cout << "\tCanci\242n no agregada" << endl;
+        }else
+        {
+           Lista.push_back(CancionTemporal); 
         }
     }
 }
 
-void searchSong(){
+void MostrarLista(){
+    cout << "\n\t-----------------------------------------------------------------------\n";
+    cout << "\t                          Canciones En La Lista                            ";
+    cout << "\n\t-----------------------------------------------------------------------\n";   
+    for (int i = 0; i < Lista.size(); i++){
+        cout << "\n\t\tID: " << Lista[i].Id << "\n";
+        cout << "\t\tNombre canci\242n : " << Lista[i].Nombre << "\n";
+        cout << "\t\tNombre del artista: " << Lista[i].NombreDelArtista << "\n";
+        music.openFromFile(Lista[i].Archivo);
+        cout << "\t\tDuraci\242n: " << music.getDuration().asSeconds() << " seg\n";
+        cout << "\t\tRuta: " << Lista[i].Archivo << "\n";
+        cout << "\n\t-----------------------------------------------------------------------\n";
+    }
+}
+
+void EliminarCancion(){
+    while (!Lista.empty())
+    {
+        int id;
+        cout << "\n\tIngresa el ID que deseas eliminar: ";
+        cin >> id;
+        cin.ignore();
+        for(int i = 0; i < Lista.size(); i++){
+            if(Lista[i].Id==id){
+                cout << "\n\t-----------------------------------------------------------------------\n";
+                cout << "\t                           Cancion Eliminada                               ";
+                cout << "\n\t-----------------------------------------------------------------------\n";
+                cout << "\n\t\tID: " << Lista[i].Id << endl;
+                cout << "\t\tNombre canci\242n : " << Lista[i].Nombre << endl;
+                cout << "\t\tNombre del artista: " << Lista[i].NombreDelArtista << endl;
+                music.openFromFile(Lista[i].Archivo);
+                cout << "\t\tDuraci\242n: " << music.getDuration().asSeconds() << endl;
+                cout << "\t\tRuta: " << Lista[i].Archivo << endl;
+                cout << "\n\t-----------------------------------------------------------------------\n";
+                Lista.erase(Lista.begin() + i);
+                break;
+            }
+        }
+    }
+    cout << "\n\t-----------------------------------------------------------------------\n";
+    cout << "\t                                 Lista vacia                               ";
+    cout << "\n\t-----------------------------------------------------------------------\n";
+    
+    
+}
+
+void BuscarCancion(){
     string unNombre;
     int indice = 0;
-    cout << "\nNombre de la cancion a buscar: ";
+    cout << "\n\tNombre de la canci\242n a buscar: ";
     getline(cin, unNombre);
-
     bool encontrado = false;
-    for (int i = 0; i < playlist.size(); i++) {
-        if(playlist[i].Nombre == unNombre){
+    for (int i = 0; i < Lista.size(); i++) {
+        if(Lista[i].Nombre == unNombre){
             encontrado = true;
             indice = i;
             break;
@@ -134,75 +146,84 @@ void searchSong(){
     }
     
     if(encontrado){
-        cout << "\nLa cancion ha sido encontrada en la lista." << endl;
-        cout << "ID: " << playlist[indice].Id << endl;
-        cout << "Nombre canción : " << playlist[indice].Nombre << endl;;
-        cout << "Nombre del artista: " << playlist[indice].NombreDelArtista << endl;;
-        cout << "Duracion: " << playlist[indice].Duracion << endl;;
+        cout << "\n\t-----------------------------------------------------------------------\n";
+        cout << "\t                            Canci\242n encontrada                          ";
+        cout << "\n\t-----------------------------------------------------------------------\n";
+        cout << "\n\t\tID: " << Lista[indice].Id << endl;
+        cout << "\t\tNombre canci\242n : " << Lista[indice].Nombre << endl;;
+        cout << "\t\tNombre del artista: " << Lista[indice].NombreDelArtista << endl;;
+        music.openFromFile(Lista[indice].Archivo);
+        cout << "\t\tDuraci\242n: " << music.getDuration().asSeconds() << "\n";
+        cout << "\t\tRuta: " << Lista[indice].Archivo << "\n";
+        cout << "\n\t-----------------------------------------------------------------------\n";
     }else{
-        cout << "\nLa Cancion no se encuentra en la Lista." << endl;
+        cout << "\n\t-----------------------------------------------------------------------\n";
+        cout << "\t                         Canci\242n no encontrada                          ";
+        cout << "\n\t-----------------------------------------------------------------------\n";
     }
 
 }
 
-void addToPlayQueue(){
-    string unNombre;
-    cancion unaCancion;
-    int indice = 0;
-    cout << "\nNombre de la cancion a encolar: ";
-    getline(cin, unNombre);
-
-    bool encontrado = false;
-    for (int i = 0; i < playlist.size(); i++) {
-        if(playlist[i].Nombre == unNombre){
-            encontrado = true;
-            indice = i;
-            break;
+void AgregarCola(){
+    string opcion;
+    cout << "\n\t1) Agregar todas las canciones a la cola";
+    cout << "\n\t2) Agregar una canci\242n a la cola" << endl;
+    cout << "\n\tIngrese una opci\242n: ";
+    getline(cin, opcion, '\n');
+    if(ValidacionDeEntero(opcion)){
+            if(opcion[0]=='1'){
+                cout << "\n\t-----------------------------------------------------------------------\n";
+                cout << "\t                          Canciones Enviadas                               ";
+                cout << "\n\t-----------------------------------------------------------------------\n"; 
+                for (int i=0;i<Lista.size();i++){
+                    cout << "\n\t\tID: " << Lista[i].Id << "\n";
+                    cout << "\t\tNombre canci\242n : " << Lista[i].Nombre << "\n";
+                    cout << "\t\tNombre del artista: " << Lista[i].NombreDelArtista << "\n";
+                    music.openFromFile(Lista[i].Archivo);
+                    cout << "\t\tDuraci\242n: " << music.getDuration().asSeconds() << " seg\n";
+                    cout << "\t\tRuta: " << Lista[i].Archivo << "\n";
+                    cout << "\n\t-----------------------------------------------------------------------\n";
+                    ColaReproducciones.push(Lista[i]);
+                }
+            }else if(opcion[0]=='2'){
+                string unNombre;
+                int indice = 0;
+                cout << "\n\tNombre de la Canci\242n a encolar: ";
+                getline(cin, unNombre);
+                bool encontrado = false;
+                for (int i = 0; i < Lista.size(); i++) {
+                    if(Lista[i].Nombre == unNombre){
+                        encontrado = true;
+                        indice = i;
+                        break;
+                    }
+                }
+                if(encontrado){
+                    ColaReproducciones.push(Lista[indice]);
+                    cout << "\n\t-----------------------------------------------------------------------\n";
+                    cout << "\t                       La Canci\242n Ha Sido Enviada                       ";
+                    cout << "\n\t-----------------------------------------------------------------------\n"; 
+                    cout << "\n\t\tID: " << Lista[indice].Id << "\n";
+                    cout << "\t\tNombre canci\242n : " << Lista[indice].Nombre << "\n";
+                    cout << "\t\tNombre del artista: " << Lista[indice].NombreDelArtista << "\n";
+                    music.openFromFile(Lista[indice].Archivo);
+                    cout << "\t\tDuraci\242n: " << music.getDuration().asSeconds() << " seg\n";
+                    cout << "\t\tRuta: " << Lista[indice].Archivo << "\n";
+                    cout << "\n\t-----------------------------------------------------------------------\n";
+                }else{
+                    cout << "\n\t-----------------------------------------------------------------------\n";
+                    cout << "\t                       La Canci\242n No Encontrada                         ";
+                    cout << "\n\t-----------------------------------------------------------------------\n"; 
+                }
+            }else{
+                cout << "\n\t\41Opcion no valida\255" << endl;
+                cout << "\n\t";
+                system("pause");
+            }
+        }else{
+            cout << "\n\tPorfavor ingrese un n\243mero" << endl;
+            cout << flush;
+            cout << "\n\t";
+            system("pause");
         }
-    }
-    unaCancion.Id=playlist[indice].Id;
-    unaCancion.Nombre=playlist[indice].Nombre;
-    unaCancion.NombreDelArtista=playlist[indice].NombreDelArtista;
-    unaCancion.Duracion=playlist[indice].Duracion;
-    if(encontrado){
-
-        
-        coladecanciones.push(unaCancion);
-        cout << "\nLa cancion ha sido enviada a la cola." << endl;
-
-        
-    }else{
-        cout << "\nLa cancion no ha sido enviada a la cola.\n No se han encontrado resultados" << endl;
-
-    }
-}
-
-void MostrarHistorial (){
-
- while (!historial.empty()){
-        
-        cout << "\nID: " << historial.top().Id<< "\t";
-        cout << "Nombre canción : " << historial.top().Nombre << "\t";
-        cout << "Nombre del artista: " << historial.top().NombreDelArtista << "\t";
-        cout << "Duracion: " << historial.top().Duracion << "\n";
-        historial.pop();
-
-    }
-
-}
-
-void EliminarHistorial (){
-
-if (!historial.empty())
-{
-    historial.pop();
-
-    cout<<"------ Se ha vaciado el historial------"<<endl;
-}
-
-else
-{
-    cout<<"-----Historial Vacio-----"<<endl;
-}
-
 }
